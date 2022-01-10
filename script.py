@@ -3,38 +3,96 @@
 # Project created to analyze tracklog data from Foreflight
 
 # import required modules
-import csv, datetime
+import csv, math
+from datetime import datetime
+
+# import OS for debugging
+import os
 
 # create class for new file
 class Tracklog:
-    def __init__(self, tracklog):
-        # Python variables holding data from tracklog
-        self.tracklog_values = []
+    # class variables
+    times = []
+    timestamps = []
+    altitudes = []
+    speeds = []
 
+    def __init__(self, tracklog):
         # import tracklog
-        with open(tracklog, newline='') as tracklog_csv:
-            fields = ['Time', 'Timestamp', 'Altitude', 'Speed']
+        with open(tracklog) as tracklog_csv:
             tracklog_reader = csv.DictReader(tracklog_csv)
 
-            # parse through tracklog file
+            # parse through tracklog file and create lists
             for row in tracklog_reader:
-                row_data = {
-                    'Timestamp': row['Timestamp'],
-                    'Altitude': row['Altitude'],
-                    'Speed': row['Speed']
-                }
-                # add to python list
-                self.tracklog_values.append(row_data)
-        # file closed
+                times = list(row['Time'].split(':'))
+                self.times.append(times)
+                self.timestamps.append(row['Time'])
+                self.altitudes.append(row['Altitude'])
+                self.speeds.append(row['Speed'])
 
-    # find average of values in numerical row)
-    def find_average(self, row):
-        # sum of row values
+    # get methods for object
+    # return times
+    def get_times(self):
+        return list(self.times)
+    
+    # return timestamps
+    def get_times(self):
+        return list(self.timestamps)
+
+    # return altitudes
+    def get_times(self):
+        return list(self.altitudes)
+
+    # return speeds
+    def get_times(self):
+        return list(self.speeds)
+
+    
+    # return highest speed
+    def highest_speed(self):
+        return float(max(list(self.speeds)))
+
+    # return lowest speed
+    def lowest_speed(self):
+        return float(min(list(self.speeds)))
+
+    # return highest altitude
+    def highest_altitude(self):
+        return float(max(list(self.altitudes)))
+
+    # return lowest altitude
+    def lowest_altitude(self):
+        return float(min(list(self.altitudes)))
+
+
+    # return average speed
+    def average_speed(self):
         sum = 0
+        for item in self.speeds: sum += float(item)
 
-        # iterate through row values and add to sum
-        for item in self.tracklog_values:
-            sum += item[row]
-        
-        # return average
-        return sum / len(self.tracklog_values)
+        return sum / len(self.speeds)
+
+    # return average altitude
+    def average_speed(self):
+        sum = 0
+        for item in self.altitudes: sum += float(item)
+
+        return sum / len(self.altitudes)
+
+    # return vertical climb speed
+    def vertical_climb(self, initial, final):
+        # find altitudes at specific times
+        initial_altitude = float(self.altitudes[self.timestamps.index(initial)])
+        final_altitude = float(self.altitudes[self.timestamps.index(final)])
+
+        # strptime variables
+        strptime_initial = datetime.strptime(initial, "%H:%M:%S")
+        strptime_final = datetime.strptime(final, "%H:%M:%S")
+        time_dif = strptime_final - strptime_initial
+
+        return float((final_altitude - initial_altitude) / time_dif.total_seconds() * 60)
+
+tracklog1 = Tracklog('tracklog-1.csv')
+print(tracklog1.timestamps[4000])
+tracklog1_vc = tracklog1.vertical_climb('20:25:45', '21:39:40')
+print(tracklog1_vc)
