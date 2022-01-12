@@ -27,26 +27,8 @@ class Tracklog:
                 times = list(row['Time'].split(':'))
                 self.times.append(times)
                 self.timestamps.append(row['Time'])
-                self.altitudes.append(row['Altitude'])
-                self.speeds.append(row['Speed'])
-
-    # get methods for object
-    # return times
-    def get_times(self):
-        return list(self.times)
-    
-    # return timestamps
-    def get_times(self):
-        return list(self.timestamps)
-
-    # return altitudes
-    def get_times(self):
-        return list(self.altitudes)
-
-    # return speeds
-    def get_times(self):
-        return list(self.speeds)
-
+                self.altitudes.append(float(row['Altitude']))
+                self.speeds.append((row['Speed']))
     
     # return highest speed
     def highest_speed(self):
@@ -92,7 +74,10 @@ class Tracklog:
 
         return float((final_altitude - initial_altitude) / time_dif.total_seconds() * 60)
 
-tracklog1 = Tracklog('tracklog-1.csv')
-print(tracklog1.timestamps[4000])
-tracklog1_vc = tracklog1.vertical_climb('20:25:45', '21:39:40')
-print(tracklog1_vc)
+if __name__ == '__main__':
+    # debugging code
+    # create tracklog 1
+    tracklog1 = Tracklog('tracklog-1.csv')
+
+    tracklog1_vc = tracklog1.vertical_climb('20:25:45', '21:39:40')
+    print('The vertical climb is: {vc}'.format(vc=tracklog1_vc))
